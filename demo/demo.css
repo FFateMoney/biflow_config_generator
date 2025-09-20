@@ -1,0 +1,164 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  display: flex;
+  font-family: Microsoft Yahei, sans-serif;
+  flex-direction: column;
+  min-height: 520px;
+  font-size: 14px;
+}
+.flowchart-panel {
+  display: flex;
+  flex-grow: 1;
+  height: calc(100% - 60px);
+}
+.flowchart-panel .left {
+  padding: 20px 15px;
+  width: 280px;
+  background: #7da7c8;
+  border-right: 1px solid #dee2e6;
+  box-shadow: 2px 0 5px rgba(5, 5, 5, 0);
+  overflow-y: auto;
+}
+.flowchart-panel .left h1 {
+  text-align:center;
+}
+.flowchart-panel .left input {
+  margin-left: 0;
+  margin-bottom: 20px;
+  font-size: 19px;
+  color: #343a40;
+  padding-left: 5px;
+}
+.flowchart-panel .left ul.nodes {
+  color: #343a40;
+  list-style: none;
+}
+.flowchart-panel .left ul.nodes li {
+  text-indent: 0;
+  font-size: 14px;
+  padding: 12px 15px;
+  margin: 12px 0;
+  list-style: none;
+  line-height: 1.6;
+}
+.flowchart-panel .left ul.nodes li a {
+  float: none;
+  padding-right: 0;
+  text-decoration: none;
+  display: inline-block;
+}
+.flowchart-panel .middle {
+  flex-grow: 1;
+  position: relative;
+  margin: 0;
+  padding: 15px;
+  background-color: #ffffff;
+}
+.flowchart-panel .right {
+  width: 360px;
+  padding: 20px 15px;
+  position: relative;
+  color: #343a40;
+  border-left: 1px solid #dee2e6;
+  background: #7da7c8;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.03);
+  overflow-y: auto;
+}
+.flowchart-panel .right h3 {
+  font-size: 19px;
+  margin-bottom: 20px;
+  color: #343a40;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #dee2e6;
+}
+.flowchart-panel .right h4 {
+  font-size: 16px;
+  margin: 15px 0 10px;
+  color: #495057;
+}
+.flowchart-panel .right p {
+  margin: 10px 0;
+  font-size: 14px;
+}
+.flowchart-panel .right label {
+  display: block;
+  margin: 10px 0;
+  font-size: 15px;
+}
+.flowchart-panel .right input {
+  width: 100%;
+  padding: 6px 8px;
+  margin-top: 5px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+}
+._jsPlumb_connector,
+._jsPlumb_startpoint,
+._jsPlumb_endpoint,
+.endpointTargetLabel,
+.endpointSourceLabel {
+  cursor: pointer;
+}
+.btns {
+  background: #f0f1f9;
+  padding: 20px;
+  border-top: 1px solid #aaa;
+}
+.btns button {
+  padding: 6px 16px;
+  background: #2196f3;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  outline: 0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.btns button:hover {
+  background: #0c7cd5;
+}
+.btns button:active {
+  background: #0960a5;
+}
+#jsonOutput {
+  width: 99%;
+  height: 100px;
+  margin: 0 auto;
+}
+.btn-save-prop, .btn-reset-prop {
+  padding: 8px 16px;
+  margin: 15px 5px 0 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.btn-save-prop {
+  background-color: #4bb564;
+  color: rgb(255, 255, 255);
+}
+.btn-save-prop:hover {
+  background-color: #00600a;
+}
+.btn-reset-prop {
+  background-color: #6c757d;
+  color: white;
+}
+.btn-reset-prop:hover {
+  background-color: #5a6268;
+}
+.left .node-name-input {
+  width: 130px;
+  font-size: 13px;
+}

@@ -1,0 +1,288 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>flowchart</title>
+    <link rel="stylesheet" type="text/css" href="../chart.css">
+    <script src="../libs/jquery.min.js"></script>
+    <script src="../libs/jsPlumb.min.js"></script>
+    <script src='../chart.js'></script>
+    <script src="./predefined-nodes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <link rel="stylesheet" href="demo.css">
+    <script src="./demo.js"></script>
+    <style>
+        .global-config {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            border-top: 1px solid #ccc;
+            padding: 10px;
+            z-index: 10;
+            font-size: 12px;
+            display: flex;
+            gap: 20px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .global-config label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .global-config input[type="text"] {
+            width: 200px;
+            padding: 2px 6px;
+        }
+
+        .global-config button {
+            padding: 4px 10px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .global-config button:hover {
+            background-color: #0c7cd5;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nodes {
+            padding: 0;
+        }
+
+        .nodes li {
+            border: 1px solid #ddd;
+            margin: 6px 10px;
+            padding: 10px;
+            border-radius: 6px;
+            background: #fff;
+            list-style: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.02);
+            cursor: pointer;
+        }
+
+        .nodes li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            border-color: #2196f3;
+        }
+
+        .nodes li div {
+            margin-bottom: 5px;
+        }
+
+        .nodes li a.btn-add {
+            color: #2196f3;
+            text-decoration: none;
+            font-size: 12px;
+            background: rgba(33, 150, 243, 0.1);
+            padding: 3px 8px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .nodes li a.btn-add:hover {
+            background: #2196f3;
+            color: white;
+        }
+
+        .node-name-input {
+            width: 100px;
+            padding: 4px 6px;
+            margin-left: 5px;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            transition: border-color 0.3s ease;
+        }
+
+        .node-name-input:focus {
+            border-color: #2196f3;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
+
+        .rename-section {
+            margin: 15px 0;
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            background: white;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.02);
+        }
+
+        .rename-section input {
+            margin-right: 10px;
+            padding: 4px 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .rename-section input:focus {
+            border-color: #2196f3;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
+
+        .btn-rename {
+            padding: 4px 10px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-rename:hover {
+            background-color: #0c7cd5;
+            transform: translateY(-1px);
+        }
+
+        /* 左侧菜单标题样式 */
+        .flowchart-panel .left h3 {
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2196f3;
+            position: relative;
+        }
+
+        .flowchart-panel .left h3::after {
+            content: '';
+            position: absolute;
+            width: 40%;
+            height: 2px;
+            background: #0c7cd5;
+            bottom: -2px;
+            left: 0;
+        }
+
+        /* 右侧面板样式增强 */
+        .flowchart-panel .right h3 {
+            position: relative;
+            padding-left: 10px;
+        }
+
+        .flowchart-panel .right h3::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #2196f3;
+        }
+
+        .flowchart-panel .right h4 {
+            color: #2196f3;
+            padding-left: 8px;
+            border-left: 2px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .flowchart-panel .right h4:hover {
+            border-left-color: #2196f3;
+        }
+
+        /* 输入框聚焦效果 */
+        .flowchart-panel .right input:focus {
+            border-color: #2196f3;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
+
+        /* 按钮交互效果 */
+        .btn-save-prop,
+        .btn-reset-prop {
+            transition: all 0.2s ease;
+        }
+
+        .btn-save-prop:hover,
+        .btn-reset-prop:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-save-prop:active,
+        .btn-reset-prop:active {
+            transform: translateY(0);
+        }
+
+        /* 滚动条美化 */
+        .flowchart-panel .left::-webkit-scrollbar,
+        .flowchart-panel .right::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .flowchart-panel .left::-webkit-scrollbar-track,
+        .flowchart-panel .right::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .flowchart-panel .left::-webkit-scrollbar-thumb,
+        .flowchart-panel .right::-webkit-scrollbar-thumb {
+            background: #bbb;
+            border-radius: 10px;
+        }
+
+        .flowchart-panel .left::-webkit-scrollbar-thumb:hover,
+        .flowchart-panel .right::-webkit-scrollbar-thumb:hover {
+            background: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='flowchart-panel'>
+        <div class='left'>
+            <h1>对象库</h1>
+            <ul class='nodes'></ul>
+        </div>
+        <div class='middle' style="position: relative;">
+            <div id="demo-chart" style="height: calc(100% - 80px);"></div>
+            <div class="global-config">
+                <label>flow_name: <input type="text" id="global-flow-name" value="test_flow" /></label>
+                <label>parallelize: <input type="text" id="global-parallelize" value="true" /></label>
+                <label>log_dir: <input type="text" id="global-log-dir" value="E:\\biflow" /></label>
+                <button id="btn-save-yaml">保存为YAML</button>
+                <button id="btn-load-yaml">读取YAML</button>
+                <input type="file" id="yaml-file-input" style="display: none;" accept=".yaml,.yml" />
+                <input type="file" id="position-file-input" style="display: none;" accept=".yaml,.yml" />
+            </div>
+        </div>
+        <div class='right'>
+            <h3 class='proc-name'></h3>
+            <div class="rename-section">
+                <label>节点名称: <input type="text" class="node-rename-input"></label>
+                <button class="btn-rename">重命名</button>
+            </div>
+            <div>
+                <label>Tool: <input class="field-tool" readonly /></label><br>
+                <label>Output Dir: <input class="field-output" /></label><br>
+                <label>Log Dir: <input class="field-log" /></label><br>
+                <h4>Input Dir</h4>
+                <div class="input-dir-fields"></div>
+                <h4>Params</h4>
+                <div class="params-fields"></div>
+                <button class="btn-save-prop">保存修改</button>
+                <button class="btn-reset-prop">还原</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
