@@ -2,7 +2,7 @@ Chart.ready(() => {
     let currentNode = null;
     let nodeCounter = 1;
 
-    const chart = new Chart($('#demo-chart'), {
+    const chart = new Chart($('#js-chart'), {
         onNodeClick(data) {
             currentNode = data;
             showNodeConfig(data);
