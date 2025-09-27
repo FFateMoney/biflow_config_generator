@@ -45,10 +45,10 @@ Chart.ready(() => {
         const html = PREDEFINED_NODES.map((node, idx) => `
             <li>
                 <div>
-                    <strong>名称:</strong> 
+                    <strong>工具:</strong> 
                     <input type="text" class="node-name-input" data-idx="${idx}" value="${node.name || '请输入名称'}">
                 </div>
-                <div>工具: ${node.tool}</div>
+                <div>操作: ${node.tool}</div>
                 <a class="btn-add" href="javascript:void(0)" data-idx="${idx}">添加</a>
             </li>
         `).join('');
