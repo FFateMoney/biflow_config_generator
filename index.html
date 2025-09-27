@@ -84,14 +84,16 @@
         }
 
         .nodes li a.btn-add {
+            display: inline-block;   /* 强制作为块级内联元素，避免文字高度挤压 */
             color: #2196f3;
             text-decoration: none;
             font-size: 12px;
             background: rgba(33, 150, 243, 0.1);
-            padding: 3px 8px;
-            border-radius: 3px;
+            padding: 4px 10px;       /* 上下4px，左右10px，更协调 */
+            border-radius: 4px;
             transition: all 0.2s ease;
         }
+
 
         .nodes li a.btn-add:hover {
             background: #2196f3;
@@ -253,7 +255,7 @@
             <ul class='nodes'></ul>
         </div>
         <div class='middle' style="position: relative;">
-            <div id="demo-chart" style="height: calc(100% - 80px);"></div>
+            <div id="js-chart" style="height: calc(100% - 80px);"></div>
             <div class="global-config">
                 <label>flow_name: <input type="text" id="global-flow-name" value="test_flow" /></label>
                 <label>parallelize: <input type="text" id="global-parallelize" value="true" /></label>
