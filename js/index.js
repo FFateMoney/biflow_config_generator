@@ -45,10 +45,10 @@ Chart.ready(() => {
         const html = PREDEFINED_NODES.map((node, idx) => `
             <li>
                 <div>
-                    <strong>工具:</strong> 
-                    <input type="text" class="node-name-input" data-idx="${idx}" value="${node.name || '请输入名称'}">
+                    <strong>tool:</strong> 
+                    <input type="text" class="node-name-input" data-idx="${idx}" value="${node.tool|| '请输入名称'}">
                 </div>
-                <div>操作: ${node.tool}</div>
+                <div>subcommand: ${node.subcommand}</div>
                 <a class="btn-add" href="javascript:void(0)" data-idx="${idx}">添加</a>
             </li>
         `).join('');
@@ -61,7 +61,7 @@ Chart.ready(() => {
             const idx = $(this).data("idx");
             const newName = $(this).val().trim();
             if (newName) {
-                PREDEFINED_NODES[idx].name = newName;
+                PREDEFINED_NODES[idx].subcommand = newName;
             }
         });
     }
@@ -72,8 +72,8 @@ Chart.ready(() => {
             const idx = $(this).data("idx");
             const nodeData = PREDEFINED_NODES[idx];
 
-            // 获取输入的名称，如果为空则使用工具名
-            const nodeName = nodeData.name || nodeData.tool || '新节点';
+            // 获取输入的名称，如果为空则使用tool名
+            const nodeName = nodeData.subcommand || nodeData.tool || '新节点';
             const nodeId = nodeCounter++;
 
             const newNode = chart.addNode(nodeName, 100, 100, {
