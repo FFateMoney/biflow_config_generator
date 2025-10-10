@@ -3,10 +3,12 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 html,
 body {
   height: 100%;
 }
+
 body {
   display: flex;
   font-family: Microsoft Yahei, sans-serif;
@@ -14,11 +16,13 @@ body {
   min-height: 520px;
   font-size: 14px;
 }
+
 .flowchart-panel {
   display: flex;
   flex-grow: 1;
   height: calc(100% - 60px);
 }
+
 .flowchart-panel .left {
   padding: 20px 15px;
   width: 280px;
@@ -27,9 +31,11 @@ body {
   box-shadow: 2px 0 5px rgba(5, 5, 5, 0);
   overflow-y: auto;
 }
+
 .flowchart-panel .left h1 {
-  text-align:center;
+  text-align: center;
 }
+
 .flowchart-panel .left input {
   margin-left: 0;
   margin-bottom: 20px;
@@ -37,10 +43,12 @@ body {
   color: #343a40;
   padding-left: 5px;
 }
+
 .flowchart-panel .left ul.nodes {
   color: #343a40;
   list-style: none;
 }
+
 .flowchart-panel .left ul.nodes li {
   text-indent: 0;
   font-size: 14px;
@@ -49,12 +57,14 @@ body {
   list-style: none;
   line-height: 1.6;
 }
+
 .flowchart-panel .left ul.nodes li a {
   float: none;
   padding-right: 0;
   text-decoration: none;
   display: inline-block;
 }
+
 .flowchart-panel .middle {
   flex-grow: 1;
   position: relative;
@@ -62,6 +72,7 @@ body {
   padding: 15px;
   background-color: #ffffff;
 }
+
 .flowchart-panel .right {
   width: 360px;
   padding: 20px 15px;
@@ -69,9 +80,10 @@ body {
   color: #343a40;
   border-left: 1px solid #dee2e6;
   background: #7da7c8;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.03);
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.03);
   overflow-y: auto;
 }
+
 .flowchart-panel .right h3 {
   font-size: 19px;
   margin-bottom: 20px;
@@ -79,20 +91,24 @@ body {
   padding-bottom: 8px;
   border-bottom: 1px solid #dee2e6;
 }
+
 .flowchart-panel .right h4 {
   font-size: 16px;
   margin: 15px 0 10px;
   color: #495057;
 }
+
 .flowchart-panel .right p {
   margin: 10px 0;
   font-size: 14px;
 }
+
 .flowchart-panel .right label {
   display: block;
   margin: 10px 0;
   font-size: 15px;
 }
+
 .flowchart-panel .right input {
   width: 100%;
   padding: 6px 8px;
@@ -100,7 +116,15 @@ body {
   border: 1px solid #ced4da;
   border-radius: 4px;
   font-size: 14px;
+  background-color: #f8f9fa;
 }
+
+.flowchart-panel .right input[readonly] {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
 ._jsPlumb_connector,
 ._jsPlumb_startpoint,
 ._jsPlumb_endpoint,
@@ -108,11 +132,13 @@ body {
 .endpointSourceLabel {
   cursor: pointer;
 }
+
 .btns {
   background: #f0f1f9;
   padding: 20px;
   border-top: 1px solid #aaa;
 }
+
 .btns button {
   padding: 6px 16px;
   background: #2196f3;
@@ -123,18 +149,23 @@ body {
   border-radius: 4px;
   font-size: 14px;
 }
+
 .btns button:hover {
   background: #0c7cd5;
 }
+
 .btns button:active {
   background: #0960a5;
 }
+
 #jsonOutput {
   width: 99%;
   height: 100px;
   margin: 0 auto;
 }
-.btn-save-prop, .btn-reset-prop {
+
+.btn-save-prop,
+.btn-reset-prop {
   padding: 8px 16px;
   margin: 15px 5px 0 0;
   border: none;
@@ -142,23 +173,232 @@ body {
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .btn-save-prop {
   background-color: #4bb564;
   color: rgb(255, 255, 255);
 }
+
 .btn-save-prop:hover {
   background-color: #00600a;
 }
+
 .btn-reset-prop {
   background-color: #6c757d;
   color: white;
 }
+
 .btn-reset-prop:hover {
   background-color: #5a6268;
 }
+
 .left .node-name-input {
   width: 130px;
   font-size: 13px;
+}
+
+.global-config {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid #ccc;
+  padding: 10px;
+  z-index: 10;
+  font-size: 12px;
+  display: flex;
+  gap: 20px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.global-config label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.global-config input[type="text"] {
+  width: 200px;
+  padding: 2px 6px;
+}
+
+.global-config button {
+  padding: 4px 10px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.global-config button:hover {
+  background-color: #0c7cd5;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nodes {
+  padding: 0;
+}
+
+.nodes li {
+  border: 1px solid #ddd;
+  margin: 6px 10px;
+  padding: 10px;
+  border-radius: 6px;
+  background: #fff;
+  list-style: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+}
+
+.nodes li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  border-color: #2196f3;
+}
+
+.nodes li div {
+  margin-bottom: 5px;
+}
+
+.nodes li a.btn-add {
+  display: inline-block;
+  /* 强制作为块级内联元素，避免文字高度挤压 */
+  color: #2196f3;
+  text-decoration: none;
+  font-size: 12px;
+  background: rgba(33, 150, 243, 0.1);
+  padding: 4px 10px;
+  /* 上下4px，左右10px，更协调 */
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+
+.nodes li a.btn-add:hover {
+  background: #2196f3;
+  color: white;
+}
+
+.node-name-input {
+  width: 100px;
+  padding: 4px 6px;
+  margin-left: 5px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  transition: border-color 0.3s ease;
+}
+
+.node-name-input:focus {
+  border-color: #2196f3;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+/* 左侧菜单标题样式 */
+.flowchart-panel .left h3 {
+  padding-bottom: 10px;
+  border-bottom: 2px solid #2196f3;
+  position: relative;
+}
+
+.flowchart-panel .left h3::after {
+  content: '';
+  position: absolute;
+  width: 40%;
+  height: 2px;
+  background: #0c7cd5;
+  bottom: -2px;
+  left: 0;
+}
+
+/* 右侧面板样式增强 */
+.flowchart-panel .right h3 {
+  position: relative;
+  padding-left: 10px;
+}
+
+.flowchart-panel .right h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: #2196f3;
+}
+
+.flowchart-panel .right h4 {
+  color: #2196f3;
+  padding-left: 8px;
+  border-left: 2px solid #ddd;
+  transition: all 0.3s ease;
+}
+
+.flowchart-panel .right h4:hover {
+  border-left-color: #2196f3;
+}
+
+/* 输入框聚焦效果 */
+.flowchart-panel .right input:focus:not([readonly]) {
+  border-color: #2196f3;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+/* 只读输入框样式 */
+.flowchart-panel .right input[readonly] {
+  border-color: #ced4da;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* 按钮交互效果 */
+.btn-save-prop,
+.btn-reset-prop {
+  transition: all 0.2s ease;
+}
+
+.btn-save-prop:hover,
+.btn-reset-prop:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-save-prop:active,
+.btn-reset-prop:active {
+  transform: translateY(0);
+}
+
+/* 滚动条美化 */
+.flowchart-panel .left::-webkit-scrollbar,
+.flowchart-panel .right::-webkit-scrollbar {
+  width: 6px;
+}
+
+.flowchart-panel .left::-webkit-scrollbar-track,
+.flowchart-panel .right::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.flowchart-panel .left::-webkit-scrollbar-thumb,
+.flowchart-panel .right::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 10px;
+}
+
+.flowchart-panel .left::-webkit-scrollbar-thumb:hover,
+.flowchart-panel .right::-webkit-scrollbar-thumb:hover {
+  background: #888;
 }
