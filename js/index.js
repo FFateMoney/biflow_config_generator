@@ -17,6 +17,7 @@ Chart.ready(() => {
             nodeId: -1,
             name: "开始",
             tool: "start",
+            subcommand: "",
             input_dir: {},
             output_dir: "",
             log_dir: "",
@@ -32,6 +33,7 @@ Chart.ready(() => {
             nodeId: -2,
             name: "结束",
             tool: "end",
+            subcommand: "",
             input_dir: {},
             output_dir: "",
             log_dir: "",
@@ -46,24 +48,16 @@ Chart.ready(() => {
             <li>
                 <div>
                     <strong>tool:</strong> 
-                    <input type="text" class="node-name-input" data-idx="${idx}" value="${node.tool|| '请输入名称'}">
+                    <span class="node-tool-display" data-idx="${idx}">${node.tool || ''}</span>
                 </div>
-                <div>subcommand: ${node.subcommand}</div>
+                <div>
+                    <strong>subcommand:</strong> 
+                    <span class="node-subcommand-display" data-idx="${idx}">${node.subcommand || ''}</span>
+                </div>
                 <a class="btn-add" href="javascript:void(0)" data-idx="${idx}">添加</a>
             </li>
         `).join('');
         $(".nodes").html(html);
-    }
-
-    // 绑定节点名称修改事件
-    function bindNameEditEvents() {
-        $(".nodes").on("change", ".node-name-input", function () {
-            const idx = $(this).data("idx");
-            const newName = $(this).val().trim();
-            if (newName) {
-                PREDEFINED_NODES[idx].subcommand = newName;
-            }
-        });
     }
 
     // 点击添加按钮 → 添加节点到画布
@@ -72,8 +66,8 @@ Chart.ready(() => {
             const idx = $(this).data("idx");
             const nodeData = PREDEFINED_NODES[idx];
 
-            // 获取输入的名称，如果为空则使用tool名
-            const nodeName = nodeData.subcommand || nodeData.tool || '新节点';
+            // 修正：使用正确的字段绑定
+            const nodeName = nodeData.tool || '新节点'; // tool作为节点名称
             const nodeId = nodeCounter++;
 
             const newNode = chart.addNode(nodeName, 100, 100, {
@@ -82,7 +76,12 @@ Chart.ready(() => {
                 data: {
                     nodeId: nodeId,
                     name: nodeName,
-                    ...nodeData
+                    tool: nodeData.tool || '', // tool字段
+                    subcommand: nodeData.subcommand || '', // subcommand字段
+                    input_dir: {},
+                    output_dir: '',
+                    log_dir: '',
+                    params: {}
                 }
             });
 
@@ -91,11 +90,14 @@ Chart.ready(() => {
         });
     }
 
-    // 展示右侧面板参数（包含重命名输入框）
+    // 展示右侧面板参数
     function showNodeConfig(data) {
         $('.proc-name').text(data.name || '');
-        $('.node-rename-input').val(data.name || ''); // 设置重命名输入框的值
-        $('.field-tool').val(data.tool || '');
+
+        // 修正：正确绑定tool和subcommand字段
+        $('.field-tool').val(data.tool || '').prop('readonly', true);
+        $('.field-subcommand').val(data.subcommand || '').prop('readonly', true);
+
         $('.field-output').val(data.output_dir || '');
         $('.field-log').val(data.log_dir || '');
 
@@ -134,39 +136,6 @@ Chart.ready(() => {
     $('.btn-reset-prop').click(() => {
         if (!currentNode) return;
         showNodeConfig(currentNode);
-    });
-
-    // 重命名按钮事件 - 实现流程图中名称同步更新
-    $('.btn-rename').click(() => {
-        if (!currentNode) return;
-
-        const newName = $('.node-rename-input').val().trim();
-        if (!newName) {
-            alert('节点名称不能为空');
-            return;
-        }
-
-        // 更新节点数据
-        currentNode.name = newName;
-
-        // 更新流程图中显示的节点名称
-        chart.getNodes().forEach(node => {
-            if (node.getData().nodeId === currentNode.nodeId) {
-                node.setName(newName);
-            }
-        });
-
-        // 更新右侧面板标题
-        $('.proc-name').text(newName);
-
-        alert('节点重命名成功！');
-    });
-
-    // 添加回车键支持
-    $('.node-rename-input').on('keypress', function (e) {
-        if (e.which === 13) { // 回车键
-            $('.btn-rename').click();
-        }
     });
 
     function downloadText(filename, text) {
@@ -217,6 +186,7 @@ Chart.ready(() => {
                 input_dir: data.input_dir,
                 output_dir: data.output_dir,
                 tool: data.tool,
+                subcommand: data.subcommand, // 添加subcommand字段
                 log_dir: data.log_dir,
                 ...(deps.length > 0 ? { dependencies: deps } : {}),
                 params: data.params
@@ -385,5 +355,4 @@ Chart.ready(() => {
     // 初始化
     renderPredefinedNodes();
     bindPredefinedEvents();
-    bindNameEditEvents();
 });
