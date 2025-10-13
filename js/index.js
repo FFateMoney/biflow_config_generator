@@ -54,7 +54,9 @@ Chart.ready(() => {
                     <strong>subcommand:</strong> 
                     <span class="node-subcommand-display" data-idx="${idx}">${node.subcommand || ''}</span>
                 </div>
-                <a class="btn-add" href="javascript:void(0)" data-idx="${idx}">添加</a>
+                <a class="btn-add" href="javascript:void(0)" data-idx="${idx}">
+                    <div class="iconfont icon-tianjia"></div>
+                </a>
             </li>
         `).join('');
         $(".nodes").html(html);
