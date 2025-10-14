@@ -5,7 +5,7 @@
 Biflow_config_generator是[Biflow](https://gitee.com/FateMoney/biflow.git)专用的配置文件生成器。它通过拖拽式的可视化界面，帮助你方便快捷地生成用于Biflow的配置文件，同时运行你读取已有的配置文件在可视化界面中修改。
 
 ## 功能介绍
-点击链接：[flowchart](https://ffatemoney.github.io/biflow_config_generator/)即可进入使用界面
+点击链接：[Biflow_config_generator](https://ffatemoney.github.io/biflow_config_generator/)即可进入使用界面
 
 页面的最左部，是内置的工具选择区，中间部分是流程图连接区，右边部分是参数设置区。你可以在工具选择区点击任意选项卡的+号，即可把该工具作为一个节点添加到中部的流程图连接区。在流程图连接区，你可以随意拖动任意一个节点，并通过点击拖动节点的端点来把两个节点连接起来。节点被添加进流程图连接区后，用鼠标单击该节点，则可在右侧的参数设置区内给该节点设置参数。另外，在中间部分底部，是整个流程图的全局变量的配置区域，即对应Biflow配置文件中的global标签。当你完成流程图的构建后，则可点击“保存为YAML”按钮，将该流程图导出为Biflow可用的配置文件；当你希望使用可视化界面对一个配置文件进行更改时，你可使用“读取YAML”按钮。
 
