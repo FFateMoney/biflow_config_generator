@@ -1,4 +1,4 @@
-* {
+demo.css* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -71,6 +71,8 @@ body {
   margin: 0;
   padding: 15px;
   background-color: #ffffff;
+  /* 修改：中间区域可滚动 */
+  overflow: auto;
 }
 
 .flowchart-panel .right {
@@ -200,18 +202,18 @@ body {
 }
 
 .global-config {
-  position: absolute;
+  position: sticky;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   border-top: 1px solid #ccc;
   padding: 10px;
   z-index: 10;
   font-size: 12px;
   display: flex;
   gap: 20px;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   flex-wrap: wrap;
   align-items: center;
 }
@@ -276,7 +278,7 @@ body {
   height: 48px;
   color: #2196f3;
   /* background: rgba(33, 150, 243, 0.1); */
-  margin-left: 175px;
+  margin-left: 150px;
   border-radius: 10px;
   transition: all 0.2s ease;
   font-size: 30px;
@@ -392,23 +394,39 @@ body {
 
 /* 滚动条美化 */
 .flowchart-panel .left::-webkit-scrollbar,
-.flowchart-panel .right::-webkit-scrollbar {
-  width: 6px;
+.flowchart-panel .right::-webkit-scrollbar,
+.flowchart-panel .middle::-webkit-scrollbar {
+  width: 8px;
+  height: 2px;
 }
 
 .flowchart-panel .left::-webkit-scrollbar-track,
-.flowchart-panel .right::-webkit-scrollbar-track {
+.flowchart-panel .right::-webkit-scrollbar-track,
+.flowchart-panel .middle::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
 }
 
 .flowchart-panel .left::-webkit-scrollbar-thumb,
-.flowchart-panel .right::-webkit-scrollbar-thumb {
+.flowchart-panel .right::-webkit-scrollbar-thumb,
+.flowchart-panel .middle::-webkit-scrollbar-thumb {
   background: #bbb;
   border-radius: 10px;
 }
 
 .flowchart-panel .left::-webkit-scrollbar-thumb:hover,
-.flowchart-panel .right::-webkit-scrollbar-thumb:hover {
+.flowchart-panel .right::-webkit-scrollbar-thumb:hover,
+.flowchart-panel .middle::-webkit-scrollbar-thumb:hover {
   background: #888;
+}
+
+/* 新增：画布容器样式，支持大尺寸流程图 */
+#js-chart {
+  width: 2000px;
+  height: 2000px;
+  position: relative;
+  background-image: url(../source/grid.png);
+  background-repeat: repeat;
+  min-width: 100%;
+  min-height: 100%;
 }
