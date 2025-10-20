@@ -68,22 +68,26 @@ Chart.ready(() => {
             const idx = $(this).data("idx");
             const nodeData = PREDEFINED_NODES[idx];
 
-            // 修正：使用正确的字段绑定
-            const nodeName = nodeData.tool || '新节点'; // tool作为节点名称
+            // 修正：使用正确的字段绑定，同时显示 tool 和 subcommand
+            const nodeName = nodeData.subcommand ?
+                `${nodeData.tool} (${nodeData.subcommand})` :
+                nodeData.tool || '新节点';
             const nodeId = nodeCounter++;
 
+            // 修正：正确传递预定义节点的所有数据
             const newNode = chart.addNode(nodeName, 100, 100, {
                 id: nodeId,
                 class: 'node-process',
                 data: {
                     nodeId: nodeId,
                     name: nodeName,
-                    tool: nodeData.tool || '', // tool字段
-                    subcommand: nodeData.subcommand || '', // subcommand字段
-                    input_dir: {},
-                    output_dir: '',
-                    log_dir: '',
-                    params: {}
+                    tool: nodeData.tool || '',
+                    subcommand: nodeData.subcommand || '',
+                    // 修正：传递预定义节点的默认值
+                    input_dir: { ...nodeData.input_dir }, // 复制对象，避免引用问题
+                    output_dir: nodeData.output_dir || '',
+                    log_dir: nodeData.log_dir || '',
+                    params: { ...nodeData.params } // 复制对象，避免引用问题
                 }
             });
 
@@ -93,42 +97,74 @@ Chart.ready(() => {
     }
 
     // 展示右侧面板参数
+    // 修正：完善属性显示函数
     function showNodeConfig(data) {
+        console.log('Node data:', data); // 调试用，可以删除
+
         $('.proc-name').text(data.name || '');
 
-        // 修正：正确绑定tool和subcommand字段
+        // 修正：正确绑定所有字段
         $('.field-tool').val(data.tool || '').prop('readonly', true);
         $('.field-subcommand').val(data.subcommand || '').prop('readonly', true);
-
         $('.field-output').val(data.output_dir || '');
         $('.field-log').val(data.log_dir || '');
 
+        // 修正：正确处理 input_dir 字段
         const inputFields = Object.entries(data.input_dir || {}).map(([key, value]) => {
-            return `<div><label>${key}:</label><input type="text" data-key="${key}" value="${value}"></div>`;
+            // 如果值是对象，转换为字符串显示
+            const displayValue = typeof value === 'object' ? JSON.stringify(value) : value;
+            return `<div class="input-field">
+            <label>${key}:</label>
+            <input type="text" data-key="${key}" value="${displayValue}" class="field-input-dir">
+        </div>`;
         }).join('');
-        $('.input-dir-fields').html(inputFields);
+        $('.input-dir-fields').html(inputFields || '<div>无输入目录配置</div>');
 
+        // 修正：正确处理 params 字段
         const paramFields = Object.entries(data.params || {}).map(([key, value]) => {
-            return `<div><label>${key}:</label><input type="text" data-key="${key}" value="${value}"></div>`;
+            // 如果值是对象，转换为字符串显示
+            const displayValue = typeof value === 'object' ? JSON.stringify(value) : value;
+            return `<div class="param-field">
+            <label>${key}:</label>
+            <input type="text" data-key="${key}" value="${displayValue}" class="field-param">
+        </div>`;
         }).join('');
-        $('.params-fields').html(paramFields);
+        $('.params-fields').html(paramFields || '<div>无参数配置</div>');
     }
 
     // 保存按钮绑定
+    // 修正：完善保存函数
     $('.btn-save-prop').click(() => {
         if (!currentNode) return;
 
+        // 更新基本字段
         currentNode.output_dir = $('.field-output').val();
         currentNode.log_dir = $('.field-log').val();
 
-        $('.input-dir-fields input').each(function () {
+        // 修正：更新 input_dir 字段
+        currentNode.input_dir = {};
+        $('.input-dir-fields .field-input-dir').each(function () {
             const key = $(this).data('key');
-            currentNode.input_dir[key] = $(this).val();
+            const value = $(this).val();
+            // 尝试解析 JSON，如果不是 JSON 就保持原样
+            try {
+                currentNode.input_dir[key] = JSON.parse(value);
+            } catch (e) {
+                currentNode.input_dir[key] = value;
+            }
         });
 
-        $('.params-fields input').each(function () {
+        // 修正：更新 params 字段
+        currentNode.params = {};
+        $('.params-fields .field-param').each(function () {
             const key = $(this).data('key');
-            currentNode.params[key] = $(this).val();
+            const value = $(this).val();
+            // 尝试解析 JSON，如果不是 JSON 就保持原样
+            try {
+                currentNode.params[key] = JSON.parse(value);
+            } catch (e) {
+                currentNode.params[key] = value;
+            }
         });
 
         alert('属性保存成功！');
