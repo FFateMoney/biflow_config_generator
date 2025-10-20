@@ -34,19 +34,52 @@
                 <input type="file" id="position-file-input" style="display: none;" accept=".yaml,.yml" />
             </div>
         </div>
+        <!-- 在右侧面板部分添加更好的样式 -->
         <div class='right'>
-            <h3 class='proc-name'></h3>
-            <div>
-                <label>tool: <input class="field-tool" readonly /></label><br>
-                <label>subcommand: <input class="field-subcommand" readonly /></label><br>
-                <label>Output Dir: <input class="field-output" /></label><br>
-                <label>Log Dir: <input class="field-log" /></label><br>
-                <h4>Input Dir</h4>
-                <div class="input-dir-fields"></div>
-                <h4>Params</h4>
-                <div class="params-fields"></div>
-                <button class="btn-save-prop">保存修改</button>
-                <button class="btn-reset-prop">还原</button>
+            <h3 class='proc-name'>节点属性</h3>
+            <div class="property-panel">
+                <div class="property-section">
+                    <h4>基本信息</h4>
+                    <label>
+                        tool:
+                        <input class="field-tool" readonly placeholder="工具名称" />
+                    </label>
+                    <label>
+                        subcommand:
+                        <input class="field-subcommand" readonly placeholder="子命令" />
+                    </label>
+                </div>
+
+                <div class="property-section">
+                    <h4>路径配置</h4>
+                    <label>
+                        output:
+                        <input class="field-output" placeholder="输出目录路径" />
+                    </label>
+                    <label>
+                        log:
+                        <input class="field-log" placeholder="日志目录路径" />
+                    </label>
+                </div>
+
+                <div class="property-section">
+                    <h4>输入目录配置</h4>
+                    <div class="input-dir-fields">
+                        <!-- 动态生成的输入目录字段 -->
+                    </div>
+                </div>
+
+                <div class="property-section">
+                    <h4>参数配置</h4>
+                    <div class="params-fields">
+                        <!-- 动态生成的参数字段 -->
+                    </div>
+                </div>
+
+                <div class="property-actions">
+                    <button class="btn-save-prop">保存修改</button>
+                    <button class="btn-reset-prop">还原</button>
+                </div>
             </div>
         </div>
     </div>
