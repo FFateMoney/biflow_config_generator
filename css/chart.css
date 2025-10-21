@@ -5,9 +5,11 @@
   background-image: url(../source/grid.png);
   background-repeat: repeat;
 }
+
 .flow-chart-canvas-lkiarest .window {
   cursor: pointer;
 }
+
 .flow-chart-canvas-lkiarest .window.task {
   border: 1px solid #346789;
   border-radius: 0.5em;
@@ -22,24 +24,31 @@
   border: 2px solid transparent;
   border-radius: 18px;
 }
+
 .flow-chart-canvas-lkiarest .window.task:hover {
   border: 2px solid #2196f3;
 }
+
 .flow-chart-canvas-lkiarest .window.task:hover .remove {
   display: block;
 }
+
 .flow-chart-canvas-lkiarest .window.task.node-start {
   background-color: #ffb952;
 }
+
 .flow-chart-canvas-lkiarest .window.task.node-end {
   background-color: #93d36e;
 }
+
 .flow-chart-canvas-lkiarest .window.task.node-process {
   background-color: #68b8f7;
 }
+
 .flow-chart-canvas-lkiarest .window.task .remove {
   display: none;
 }
+
 .flow-chart-canvas-lkiarest .window.task .remove:before {
   content: 'x';
   right: -4px;
@@ -53,13 +62,16 @@
   color: #fff;
   background: #333;
 }
+
 .jsplumb-overlay.endpoint-label-lkiarest {
   font-size: 12px;
   color: #222;
 }
+
 .jsplumb-endpoint.jsplumb-endpoint-anchor {
   cursor: pointer;
 }
+
 .jsplumb-endpoint.jsplumb-endpoint-anchor.jsplumb-hover,
 .jsplumb-endpoint.jsplumb-endpoint-anchor.jsplumb-drag-hover {
   background: #f55;
