@@ -96,37 +96,40 @@ Chart.ready(() => {
         });
     }
 
-    // 展示右侧面板参数
-    // 修正：完善属性显示函数
+    // 在 showNodeConfig 函数中，优化字段显示
     function showNodeConfig(data) {
-        console.log('Node data:', data); // 调试用，可以删除
+        console.log('Node data:', data);
 
         $('.proc-name').text(data.name || '');
 
-        // 修正：正确绑定所有字段
+        // 基本信息字段
         $('.field-tool').val(data.tool || '').prop('readonly', true);
         $('.field-subcommand').val(data.subcommand || '').prop('readonly', true);
         $('.field-output').val(data.output_dir || '');
         $('.field-log').val(data.log_dir || '');
 
-        // 修正：正确处理 input_dir 字段
+        // 优化输入目录字段显示
         const inputFields = Object.entries(data.input_dir || {}).map(([key, value]) => {
-            // 如果值是对象，转换为字符串显示
             const displayValue = typeof value === 'object' ? JSON.stringify(value) : value;
+            // 使用更友好的标签名称
+            const friendlyKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
             return `<div class="input-field">
-            <label>${key}:</label>
-            <input type="text" data-key="${key}" value="${displayValue}" class="field-input-dir">
+            <label>${friendlyKey}:</label>
+            <input type="text" data-key="${key}" value="${displayValue}" class="field-input-dir" 
+                   placeholder="输入 ${friendlyKey} 的值">
         </div>`;
         }).join('');
         $('.input-dir-fields').html(inputFields || '<div>无输入目录配置</div>');
 
-        // 修正：正确处理 params 字段
+        // 优化参数字段显示
         const paramFields = Object.entries(data.params || {}).map(([key, value]) => {
-            // 如果值是对象，转换为字符串显示
             const displayValue = typeof value === 'object' ? JSON.stringify(value) : value;
+            // 使用更友好的标签名称
+            const friendlyKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
             return `<div class="param-field">
-            <label>${key}:</label>
-            <input type="text" data-key="${key}" value="${displayValue}" class="field-param">
+            <label>${friendlyKey}:</label>
+            <input type="text" data-key="${key}" value="${displayValue}" class="field-param"
+                   placeholder="输入 ${friendlyKey} 的值">
         </div>`;
         }).join('');
         $('.params-fields').html(paramFields || '<div>无参数配置</div>');
