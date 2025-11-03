@@ -16,12 +16,18 @@
 </head>
 
 <body>
-    <div class='flowchart-panel'>
+    <div class='flowchart'>
+        <!-- Start-left -->
         <div class='left'>
-            <h1>对象库</h1>
-            <ul class='nodes'></ul>
+            <div class='left-wrap'>
+                <h1>对象库</h1>
+                <ul class='nodes'></ul>
+            </div>
         </div>
-        <div class='middle' style="position: relative;">
+        <!-- End-left -->
+
+        <!-- Start-middle -->
+        <div class='middle'>
             <div id="js-chart"></div>
             <div class="global-config">
                 <label>flow_name: <input type="text" id="global-flow-name" value="test_flow" /></label>
@@ -33,7 +39,9 @@
                 <input type="file" id="position-file-input" style="display: none;" accept=".yaml,.yml" />
             </div>
         </div>
-        <!-- 在右侧面板部分添加更好的样式 -->
+        <!-- End-middle -->
+
+        <!-- Start-right -->
         <div class='right'>
             <h3 class='proc-name'>节点属性</h3>
             <div class="property-panel">
@@ -41,10 +49,12 @@
                     <h4>基本信息</h4>
                     <label>
                         tool:
+                        <!-- 规定只读 -->
                         <input class="field-tool" readonly placeholder="工具名称" />
                     </label>
                     <label>
                         subcommand:
+                        <!-- 规定只读 -->
                         <input class="field-subcommand" readonly placeholder="子命令" />
                     </label>
                 </div>
@@ -81,6 +91,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!-- End-right -->
+
     </div>
 </body>
 

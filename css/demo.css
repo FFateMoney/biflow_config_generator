@@ -17,26 +17,57 @@ body {
   font-size: 14px;
 }
 
-.flowchart-panel {
+.flowchart {
   display: flex;
-  flex-grow: 1;
-  height: calc(100% - 60px);
+  height: 100vh;
+  /* 占据整个视口高度 */
 }
 
-.flowchart-panel .left {
+.flowchart .left {
+  z-index: 1;
+  position: relative;
   padding: 20px 15px;
-  width: 280px;
+  width: 360px;
   background: #7da7c8;
-  border-right: 1px solid #dee2e6;
   box-shadow: 2px 0 5px rgba(5, 5, 5, 0);
-  overflow-y: auto;
+  border: 5px solid #7da7c8;
+  border-radius: 10px;
+  overflow-y: hidden;
 }
 
-.flowchart-panel .left h1 {
+.flowchart .left:hover {
+  overflow-y: auto;
+  /* 鼠标悬停时显示滚动条 */
+}
+
+.left::-webkit-scrollbar {
+  width: 8px;
+  /* 滚动条宽度 */
+  background-color: transparent;
+  /* 保持背景透明 */
+}
+
+/* 滚动条的滑块样式 */
+.left::-webkit-scrollbar-thumb {
+  background-color: #c4c4c4;
+  border-radius: 4px;
+}
+
+/* 悬停时滑块变深 */
+.left::-webkit-scrollbar-thumb:hover {
+  background-color: #ffffff;
+}
+
+/* 自定义滚动条轨道（悬停时样式） */
+.left::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.flowchart .left h1 {
   text-align: center;
 }
 
-.flowchart-panel .left input {
+.flowchart .left input {
   margin-left: 0;
   margin-bottom: 20px;
   font-size: 19px;
@@ -44,12 +75,12 @@ body {
   padding-left: 5px;
 }
 
-.flowchart-panel .left ul.nodes {
+.flowchart .left ul.nodes {
   color: #343a40;
   list-style: none;
 }
 
-.flowchart-panel .left ul.nodes li {
+.flowchart .left ul.nodes li {
   text-indent: 0;
   font-size: 14px;
   padding: 12px 15px;
@@ -58,35 +89,73 @@ body {
   line-height: 1.6;
 }
 
-.flowchart-panel .left ul.nodes li a {
+.flowchart .left ul.nodes li a {
   float: none;
   padding-right: 0;
   text-decoration: none;
   display: inline-block;
 }
 
-.flowchart-panel .middle {
+.flowchart .middle {
   flex-grow: 1;
   position: relative;
   margin: 0;
   padding: 15px;
   background-color: #ffffff;
   /* 修改：中间区域可滚动 */
-  overflow: auto;
-}
-
-.flowchart-panel .right {
-  width: 360px;
-  padding: 20px 15px;
-  position: relative;
-  color: #343a40;
-  border-left: 1px solid #dee2e6;
-  background: #7da7c8;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.03);
   overflow-y: auto;
 }
 
-.flowchart-panel .right h3 {
+.flowchart .middle::-webkit-scrollbar {
+  display: none;
+  /* 适用于Chrome, Safari, and Edge */
+}
+
+.flowchart .right {
+  z-index: 1;
+  width: 560px;
+  padding: 20px 15px;
+  position: relative;
+  color: #343a40;
+
+  border: 5px solid #7da7c8;
+  border-radius: 10px;
+
+  background: #7da7c8;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.03);
+
+  overflow-y: hidden;
+}
+
+.flowchart .right:hover {
+  overflow-y: auto;
+  /* 鼠标悬停时显示滚动条 */
+}
+
+.right::-webkit-scrollbar {
+  width: 8px;
+  /* 滚动条宽度 */
+  background-color: transparent;
+  /* 保持背景透明 */
+}
+
+/* 滚动条的滑块样式 */
+.right::-webkit-scrollbar-thumb {
+  background-color: #c4c4c4;
+  border-radius: 4px;
+}
+
+/* 悬停时滑块变深 */
+.right::-webkit-scrollbar-thumb:hover {
+  background-color: #ffffff;
+}
+
+/* 自定义滚动条轨道（悬停时样式） */
+.right::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.flowchart .right h3 {
   font-size: 19px;
   margin-bottom: 20px;
   color: #343a40;
@@ -94,24 +163,24 @@ body {
   border-bottom: 1px solid #dee2e6;
 }
 
-.flowchart-panel .right h4 {
+.flowchart .right h4 {
   font-size: 16px;
   margin: 15px 0 10px;
   color: #495057;
 }
 
-.flowchart-panel .right p {
+.flowchart .right p {
   margin: 10px 0;
   font-size: 14px;
 }
 
-.flowchart-panel .right label {
+.flowchart .right label {
   display: block;
   margin: 10px 0;
   font-size: 15px;
 }
 
-.flowchart-panel .right input {
+.flowchart .right input {
   width: 100%;
   padding: 6px 8px;
   margin-top: 5px;
@@ -121,7 +190,7 @@ body {
   background-color: #f8f9fa;
 }
 
-.flowchart-panel .right input[readonly] {
+.flowchart .right input[readonly] {
   background-color: #e9ecef;
   color: #6c757d;
   cursor: not-allowed;
@@ -282,7 +351,7 @@ body {
   width: 48px;
   height: 48px;
   color: #2196f3;
-  margin-left: 140px;
+  /* margin-left: 140px; */
   border-radius: 10px;
   transition: all 0.2s ease;
   font-size: 30px;
@@ -321,13 +390,13 @@ body {
 }
 
 /* 左侧菜单标题样式 */
-.flowchart-panel .left h3 {
+.flowchart .left h3 {
   padding-bottom: 10px;
   border-bottom: 2px solid #2196f3;
   position: relative;
 }
 
-.flowchart-panel .left h3::after {
+.flowchart .left h3::after {
   content: '';
   position: absolute;
   width: 40%;
@@ -338,12 +407,12 @@ body {
 }
 
 /* 右侧面板样式增强 */
-.flowchart-panel .right h3 {
+.flowchart .right h3 {
   position: relative;
   padding-left: 10px;
 }
 
-.flowchart-panel .right h3::before {
+.flowchart .right h3::before {
   content: '';
   position: absolute;
   left: 0;
@@ -353,26 +422,26 @@ body {
   background: #2196f3;
 }
 
-.flowchart-panel .right h4 {
+.flowchart .right h4 {
   color: #2196f3;
   padding-left: 8px;
   border-left: 2px solid #ddd;
   transition: all 0.3s ease;
 }
 
-.flowchart-panel .right h4:hover {
+.flowchart .right h4:hover {
   border-left-color: #2196f3;
 }
 
 /* 输入框聚焦效果 */
-.flowchart-panel .right input:focus:not([readonly]) {
+.flowchart .right input:focus:not([readonly]) {
   border-color: #2196f3;
   outline: none;
   box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
 }
 
 /* 只读输入框样式 */
-.flowchart-panel .right input[readonly] {
+.flowchart .right input[readonly] {
   border-color: #ced4da;
   background-color: #f8f9fa;
   color: #6c757d;
@@ -396,29 +465,6 @@ body {
   transform: translateY(0);
 }
 
-/* 滚动条美化 */
-.input-dir-fields::-webkit-scrollbar,
-.params-fields::-webkit-scrollbar {
-  width: 6px;
-}
-
-.input-dir-fields::-webkit-scrollbar-track,
-.params-fields::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-.input-dir-fields::-webkit-scrollbar-thumb,
-.params-fields::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
-}
-
-.input-dir-fields::-webkit-scrollbar-thumb:hover,
-.params-fields::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
 /* 新增：画布容器样式，支持大尺寸流程图 */
 #js-chart {
   width: 2000px;
@@ -428,19 +474,6 @@ body {
   background-repeat: repeat;
   min-width: 100%;
   min-height: 100%;
-}
-
-/* 添加右侧属性面板的样式 */
-.flowchart-panel .right {
-  width: 380px;
-  /* 稍微增加宽度 */
-  padding: 20px 15px;
-  position: relative;
-  color: #343a40;
-  border-left: 1px solid #dee2e6;
-  background: #7da7c8;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.03);
-  overflow-y: auto;
 }
 
 /* 优化属性面板布局 */
@@ -487,82 +520,166 @@ body {
   /* 重要：确保宽度计算包含padding和border */
 }
 
-/* 优化输入目录和参数字段布局 */
+/* 优化输入目录和参数字段布局 - 垂直排列 */
 .input-dir-fields,
 .params-fields {
-  max-height: 200px;
+  max-height: 300px;
+  /* 增加最大高度以容纳更多内容 */
   overflow-y: auto;
   margin: 10px 0;
 }
 
+/* 修改输入字段为垂直布局 */
 .input-field,
 .param-field {
-  display: flex;
-  align-items: center;
-  margin: 8px 0;
-  padding: 8px 10px;
+  display: block;
+  /* 改为块级元素，实现垂直排列 */
+  margin: 12px 0;
+  padding: 12px;
   background: white;
-  border-radius: 4px;
+  border-radius: 6px;
   border: 1px solid #e9ecef;
-  gap: 10px;
-  /* 使用gap替代margin */
+  transition: all 0.2s ease;
 }
 
+.input-field:hover,
+.param-field:hover {
+  border-color: #2196f3;
+  box-shadow: 0 2px 4px rgba(33, 150, 243, 0.1);
+}
+
+/* 标签样式 - 单独一行 */
 .input-field label,
 .param-field label {
-  min-width: 100px;
-  max-width: 100px;
-  margin: 0;
-  font-weight: normal;
-  font-size: 13px;
-  color: #6c757d;
+  display: block;
+  width: 100%;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: #495057;
+  padding: 0;
+  min-width: auto;
+  max-width: none;
   flex-shrink: 0;
-  /* 防止标签被压缩 */
 }
 
+/* 输入框样式 - 单独一行，宽度100% */
 .input-field input,
 .param-field input {
-  flex: 1;
+  width: 100%;
   margin: 0;
-  padding: 6px 8px;
+  padding: 10px 12px;
   border: 1px solid #ddd;
-  border-radius: 3px;
-  font-size: 13px;
+  border-radius: 4px;
+  font-size: 14px;
   min-width: 0;
-  /* 允许输入框缩小 */
+  box-sizing: border-box;
+  transition: all 0.2s ease;
 }
 
-/* 优化操作按钮布局 */
-.property-actions {
-  text-align: center;
-  padding: 20px 0 10px 0;
-  border-top: 1px solid #dee2e6;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+.input-field input:focus,
+.param-field input:focus {
+  border-color: #2196f3;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
 }
 
-/* 空状态提示样式 */
+/* 空状态提示样式调整 */
 .input-dir-fields>div:not(.input-field),
 .params-fields>div:not(.param-field) {
   text-align: center;
   color: #6c757d;
   font-style: italic;
-  padding: 20px;
+  padding: 30px 20px;
   background: white;
-  border-radius: 4px;
+  border-radius: 6px;
   border: 1px dashed #dee2e6;
+  margin: 10px 0;
+}
+
+/* 属性区块样式微调 */
+.property-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #2196f3;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.property-section h4 {
+  margin: 0 0 15px 0;
+  color: #2196f3;
+  font-size: 16px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+/* 基本信息字段样式调整 */
+.property-section label {
+  display: block;
+  margin: 15px 0 8px 0;
+  font-weight: 500;
+  color: #495057;
+  font-size: 14px;
+}
+
+.property-section input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 4px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.property-section input:focus:not([readonly]) {
+  border-color: #2196f3;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+/* 滚动条优化 */
+.input-dir-fields::-webkit-scrollbar,
+.params-fields::-webkit-scrollbar {
+  width: 8px;
+}
+
+.input-dir-fields::-webkit-scrollbar-track,
+.params-fields::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.input-dir-fields::-webkit-scrollbar-thumb,
+.params-fields::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.input-dir-fields::-webkit-scrollbar-thumb:hover,
+.params-fields::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
 /* 响应式调整 */
 @media (max-width: 1400px) {
-  .flowchart-panel .right {
-    width: 350px;
+  .flowchart .right {
+    width: 380px;
+    /* 保持原有宽度 */
   }
 
-  .input-field label,
-  .param-field label {
-    min-width: 90px;
-    max-width: 90px;
+  .input-field,
+  .param-field {
+    padding: 10px;
+  }
+
+  .input-field input,
+  .param-field input {
+    padding: 8px 10px;
   }
 }
