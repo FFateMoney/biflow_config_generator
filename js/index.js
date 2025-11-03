@@ -100,6 +100,13 @@ Chart.ready(() => {
     function showNodeConfig(data) {
         console.log('Node data:', data);
 
+        // Escape HTML for safe attribute insertion
+        const esc = (s) => String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
         $('.proc-name').text(data.name || '');
 
         // 基本信息字段
@@ -115,7 +122,7 @@ Chart.ready(() => {
             const friendlyKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
             return `<div class="input-field">
             <label>${friendlyKey}:</label>
-            <input type="text" data-key="${key}" value="${displayValue}" class="field-input-dir" 
+            <input type="text" data-key="${key}" value="${esc(displayValue)}" class="field-input-dir" 
                    placeholder="输入 ${friendlyKey} 的值">
         </div>`;
         }).join('');
@@ -128,7 +135,7 @@ Chart.ready(() => {
             const friendlyKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
             return `<div class="param-field">
             <label>${friendlyKey}:</label>
-            <input type="text" data-key="${key}" value="${displayValue}" class="field-param"
+            <input type="text" data-key="${key}" value="${esc(displayValue)}" class="field-param"
                    placeholder="输入 ${friendlyKey} 的值">
         </div>`;
         }).join('');
