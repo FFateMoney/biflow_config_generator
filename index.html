@@ -8,7 +8,7 @@
     <script src="libs/jquery.min.js"></script>
     <script src="libs/jsPlumb.min.js"></script>
     <script src='js/chart.js'></script>
-    <script src="js/predefined-nodes_back.js"></script>
+    <script src="js/predefined-nodes.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
     <link rel="stylesheet" href="css/demo.css">
     <script src="js/index.js"></script>
@@ -39,11 +39,7 @@
                 <label>log_dir: <input type="text" id="global-log-dir" value="E:\\biflow" /></label>
                 <button id="btn-save-yaml">保存为 YAML</button>
                 <button id="btn-load-yaml">读取 YAML</button>
-                <label style="margin-left:8px;">
-                    <input type="checkbox" id="use-position-file" checked /> 使用位置文件（否则自动布局）？
-                </label>
                 <input type="file" id="yaml-file-input" style="display: none;" accept=".yaml,.yml" />
-                <input type="file" id="position-file-input" style="display: none;" accept=".yaml,.yml" />
             </div>
         </div>
         <!-- End-middle -->
@@ -71,10 +67,6 @@
                     <label>
                         output:
                         <input class="field-output" placeholder="输出目录路径" />
-                    </label>
-                    <label>
-                        log:
-                        <input class="field-log" placeholder="日志目录路径" />
                     </label>
                 </div>
 

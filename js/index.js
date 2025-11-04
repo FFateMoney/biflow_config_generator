@@ -11,29 +11,101 @@ Chart.ready(() => {
     }
   });
 
-  // Start/End nodes
-  const DEFAULT_START_POS = { x: 800, y: 20 };
-  const DEFAULT_END_POS = { x: 800, y: 500 };
-  let startNode = null;
-  let endNode = null;
+  const AUTO_LAYOUT = {
+    BASE_X: 360,
+    BASE_Y: 160,
+    COLUMN_GAP: 260,
+    ROW_GAP: 240
+  };
 
-  function addAnchorNodes(startPos = DEFAULT_START_POS, endPos = DEFAULT_END_POS) {
-    startNode = chart.addNode("\u5f00\u59cb", startPos.x, startPos.y, {
-      id: -1,
-      class: "node-start",
-      data: { nodeId: -1, name: "\u5f00\u59cb", tool: "start", subcommand: "", input_dir: {}, output_dir: "", params: {} }
-    });
-    startNode.addPort({ isSource: true, uuid: portUuid(-1, 'source') });
+  const $canvas = $("#js-chart");
+  const $viewport = $(".middle");
+  const MIN_SCALE = 0.2;
+  const MAX_SCALE = 3;
+  const GRID_BASE_SIZE = 40;
+  let panX = 0;
+  let panY = 0;
+  let scale = 1;
+  let isPanning = false;
+  let lastPointer = { x: 0, y: 0 };
 
-    endNode = chart.addNode("\u7ed3\u675f", endPos.x, endPos.y, {
-      id: -2,
-      class: "node-end",
-      data: { nodeId: -2, name: "\u7ed3\u675f", tool: "end", subcommand: "", input_dir: {}, output_dir: "", params: {} }
-    });
-    endNode.addPort({ isTarget: true, position: "Top", uuid: portUuid(-2, 'target') });
+  function updateViewportGrid() {
+    const scaledSize = GRID_BASE_SIZE * scale || GRID_BASE_SIZE;
+    const wrap = (value) => {
+      const size = scaledSize || GRID_BASE_SIZE;
+      const mod = ((value % size) + size) % size;
+      return `${mod}px`;
+    };
+    $viewport.css("--grid-scale", scale);
+    $viewport.css("--grid-offset-x", wrap(-panX));
+    $viewport.css("--grid-offset-y", wrap(-panY));
   }
 
-  addAnchorNodes();
+  function applyViewportTransform() {
+    $canvas.css("transform", `translate(${panX}px, ${panY}px) scale(${scale})`);
+    if (chart && chart._jsPlumb) {
+      chart._jsPlumb.setZoom(scale);
+    }
+    updateViewportGrid();
+  }
+
+  function resetViewport() {
+    panX = 0;
+    panY = 0;
+    scale = 1;
+    applyViewportTransform();
+  }
+
+  resetViewport();
+
+  $viewport.on("mousedown", (event) => {
+    if (event.button !== 0) return;
+    const $target = $(event.target);
+    if ($target.closest(".task").length) return;
+    if ($target.closest(".global-config").length) return;
+    isPanning = true;
+    lastPointer = { x: event.clientX, y: event.clientY };
+    $viewport.addClass("panning");
+    event.preventDefault();
+  });
+
+  $(window)
+    .on("mousemove", (event) => {
+      if (!isPanning) return;
+      const dx = event.clientX - lastPointer.x;
+      const dy = event.clientY - lastPointer.y;
+      panX += dx;
+      panY += dy;
+      lastPointer = { x: event.clientX, y: event.clientY };
+      applyViewportTransform();
+      event.preventDefault();
+    })
+    .on("mouseup", () => {
+      if (!isPanning) return;
+      isPanning = false;
+      $viewport.removeClass("panning");
+    })
+    .on("mouseleave", () => {
+      if (!isPanning) return;
+      isPanning = false;
+      $viewport.removeClass("panning");
+    });
+
+  $viewport.on("wheel", (event) => {
+    const original = event.originalEvent;
+    if (!original || typeof original.deltaY === "undefined") return;
+    event.preventDefault();
+    const zoomFactor = original.deltaY < 0 ? 1.1 : 0.9;
+    const nextScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale * zoomFactor));
+    if (nextScale === scale) return;
+    const rect = $viewport[0].getBoundingClientRect();
+    const pivotX = original.clientX - rect.left;
+    const pivotY = original.clientY - rect.top;
+    panX = pivotX - ((pivotX - panX) * nextScale) / scale;
+    panY = pivotY - ((pivotY - panY) * nextScale) / scale;
+    scale = nextScale;
+    applyViewportTransform();
+  });
 
   // Left list: render + filter
   function renderPredefinedNodes() {
@@ -164,15 +236,12 @@ Chart.ready(() => {
       }).filter(id => id !== null);
       return { id: data.nodeId, name: data.name, input_dir: data.input_dir, output_dir: data.output_dir, tool: data.tool, subcommand: data.subcommand, ...(deps.length>0?{dependencies:deps}:{}) , params: data.params };
     });
-    const layout = allNodes.map(n => { const p = n.getPos(); return { id: n.getData().nodeId, x: p.x, y: p.y }; });
     const configYaml = jsyaml.dump({ global, nodes });
-    const positionYaml = jsyaml.dump({ nodes: layout });
     downloadText(`${flowName}.yaml`, configYaml);
-    downloadText(`${flowName}-position.yaml`, positionYaml);
     alert('YAML \u6587\u4ef6\u4fdd\u5b58\u6210\u529f\uff01');
   });
 
-  // Import YAML (with optional position)
+  // Import YAML
   $('#btn-load-yaml').click(() => { $('#yaml-file-input').click(); });
 
   // Normalize node fields that may be arrays-of-maps in YAML into plain objects
@@ -198,103 +267,31 @@ Chart.ready(() => {
     return cfg;
   }
 
-  function mapPositions(positionData) {
-    const posMap = new Map();
-    if (!positionData || !Array.isArray(positionData.nodes)) {
-      return posMap;
-    }
-    positionData.nodes.forEach((entry) => {
-      if (!entry) return;
-      const rawId = entry.id ?? entry.nodeId;
-      const id = Number(rawId);
-      if (!Number.isFinite(id)) return;
-      const x = Number(entry.x ?? entry.positionX);
-      const y = Number(entry.y ?? entry.positionY);
-      if (!Number.isFinite(x) || !Number.isFinite(y)) return;
-      posMap.set(id, { x, y });
-    });
-    return posMap;
-  }
-
-  function computeAutoLayout(nodes, orderIndexOverride) {
+  function computeAutoLayout(nodes) {
     const positions = new Map();
     if (!Array.isArray(nodes) || nodes.length === 0) {
       return { positions, bounds: null };
     }
 
-    const nodeById = new Map();
-    const orderIndex = new Map();
-    nodes.forEach((node, idx) => {
-      if (!node) return;
-      const id = Number(node.id ?? node.nodeId);
-      if (!Number.isFinite(id)) return;
-      nodeById.set(id, node);
-      if (orderIndexOverride && orderIndexOverride.has(id)) {
-        orderIndex.set(id, orderIndexOverride.get(id));
-      } else {
-        orderIndex.set(id, idx);
-      }
-    });
-
-    const memo = new Map();
-    function resolveLevel(id, stack = new Set()) {
-      if (!nodeById.has(id)) return 0;
-      if (memo.has(id)) return memo.get(id);
-      if (stack.has(id)) return 0;
-      stack.add(id);
-      const node = nodeById.get(id);
-      const deps = Array.isArray(node.dependencies) ? node.dependencies : [];
-      let level = 0;
-      deps.forEach((dep) => {
-        const depId = Number(dep);
-        if (!Number.isFinite(depId)) return;
-        const depLevel = resolveLevel(depId, stack) + 1;
-        if (depLevel > level) level = depLevel;
-      });
-      stack.delete(id);
-      memo.set(id, level);
-      return level;
-    }
-
-    nodeById.forEach((_, id) => { resolveLevel(id); });
-
-    const levelBuckets = new Map();
-    nodeById.forEach((_, id) => {
-      const level = memo.get(id) || 0;
-      if (!levelBuckets.has(level)) {
-        levelBuckets.set(level, []);
-      }
-      levelBuckets.get(level).push(id);
-    });
-
-    levelBuckets.forEach((ids) => {
-      ids.sort((a, b) => {
-        const ia = orderIndex.get(a) ?? 0;
-        const ib = orderIndex.get(b) ?? 0;
-        return ia - ib;
-      });
-    });
-
-    const COLUMN_GAP = 260;
-    const ROW_GAP = 140;
-    const BASE_X = 280;
-    const BASE_Y = 120;
+    const { COLUMN_GAP, BASE_X, BASE_Y, ROW_GAP } = AUTO_LAYOUT;
     let minX = Infinity;
     let minY = Infinity;
     let maxX = -Infinity;
     let maxY = -Infinity;
 
-    Array.from(levelBuckets.keys()).sort((a, b) => a - b).forEach((level) => {
-      const ids = levelBuckets.get(level) || [];
-      ids.forEach((id, idx) => {
-        const x = BASE_X + level * COLUMN_GAP;
-        const y = BASE_Y + idx * ROW_GAP;
-        positions.set(id, { x, y });
-        if (x < minX) minX = x;
-        if (x > maxX) maxX = x;
-        if (y < minY) minY = y;
-        if (y > maxY) maxY = y;
-      });
+    nodes.forEach((node, idx) => {
+      if (!node) return;
+      const id = Number(node.id ?? node.nodeId);
+      if (!Number.isFinite(id)) return;
+      const col = idx % 3;
+      const row = Math.floor(idx / 3);
+      const x = BASE_X + col * COLUMN_GAP;
+      const y = BASE_Y + row * ROW_GAP;
+      positions.set(id, { x, y });
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
     });
 
     if (!Number.isFinite(minX)) {
@@ -307,10 +304,12 @@ Chart.ready(() => {
     return { positions, bounds: { minX, maxX, minY, maxY } };
   }
 
-  async function buildFlowFromConfigAndPosition(config, positionData) {
+  async function buildFlowFromConfig(config) {
     if (!config || !Array.isArray(config.nodes)) {
       throw new Error("配置文件缺少 nodes 数组");
     }
+
+    resetViewport();
 
     const globalCfg = config.global || {};
     if (typeof globalCfg.flow_name !== "undefined") {
@@ -324,17 +323,6 @@ Chart.ready(() => {
     }
 
     const nodes = config.nodes.slice();
-    const orderIndex = new Map();
-    nodes.forEach((node, idx) => {
-      if (!node) return;
-      const rawId = node.id ?? node.nodeId;
-      const nodeId = Number(rawId);
-      if (Number.isFinite(nodeId)) {
-        orderIndex.set(nodeId, idx);
-      }
-    });
-
-    const providedPositions = mapPositions(positionData);
     const processEntries = nodes
       .map((node, idx) => ({ node, idx }))
       .filter(({ node }) => {
@@ -349,35 +337,33 @@ Chart.ready(() => {
         return true;
       });
     const processNodes = processEntries.map(entry => entry.node);
-    const autoLayout = computeAutoLayout(processNodes, orderIndex);
+    const autoLayout = computeAutoLayout(processNodes);
     const plumb = chart._jsPlumb;
     if (!plumb) {
       throw new Error("jsPlumb 实例未就绪");
     }
 
     chart.clear();
-    addAnchorNodes();
     currentNode = null;
 
     const nodeMap = new Map();
-    nodeMap.set(-1, startNode);
-    nodeMap.set(-2, endNode);
-    const startAnchorOverride = providedPositions.get(-1);
-    const endAnchorOverride = providedPositions.get(-2);
 
     let maxNodeId = 0;
     let placementIndex = 0;
-    processEntries.forEach(({ node, idx }) => {
+    const { BASE_X, BASE_Y, COLUMN_GAP, ROW_GAP } = AUTO_LAYOUT;
+    processEntries.forEach(({ node }) => {
       const rawId = node.id ?? node.nodeId;
       const nodeId = Number(rawId);
       if (!Number.isFinite(nodeId)) {
-        throw new Error(`节点 ${node.name || rawId || idx} 缺少合法的 id`);
+        throw new Error(`节点 ${node.name || rawId} 缺少合法的 id`);
       }
       const nameFromConfig = node.name || (node.subcommand ? `${node.tool || ""} (${node.subcommand})` : (node.tool || `节点${nodeId}`));
       const fallbackIndex = placementIndex++;
-      const position = providedPositions.get(nodeId) || autoLayout.positions.get(nodeId) || {
-        x: 300 + fallbackIndex * 40,
-        y: 140 + fallbackIndex * 40
+      const fallbackColumn = fallbackIndex % 3;
+      const fallbackRow = Math.floor(fallbackIndex / 3);
+      const position = autoLayout.positions.get(nodeId) || {
+        x: BASE_X + fallbackColumn * COLUMN_GAP,
+        y: BASE_Y + fallbackRow * ROW_GAP
       };
       const nodeData = {
         nodeId,
@@ -425,41 +411,18 @@ Chart.ready(() => {
       });
     });
 
-    if (nodeMap.size > 0) {
-      const firstNodeId = Number(nodes[0].id ?? nodes[0].nodeId);
-      const firstChartNode = nodeMap.get(firstNodeId);
-      if (firstChartNode) {
-        currentNode = firstChartNode.getData();
-        showNodeConfig(currentNode);
-      }
+    const firstProcessNode = processEntries[0]?.node || null;
+    const fallbackNode = firstProcessNode || nodes.find((node) => {
+      const id = Number(node?.id ?? node?.nodeId);
+      return Number.isFinite(id);
+    }) || null;
+    const firstNodeId = Number((fallbackNode?.id ?? fallbackNode?.nodeId));
+    if (Number.isFinite(firstNodeId) && nodeMap.has(firstNodeId)) {
+      currentNode = nodeMap.get(firstNodeId).getData();
+      showNodeConfig(currentNode);
     }
 
-    const bounds = autoLayout.bounds;
-    const hasProcessLayout = processEntries.length > 0 && bounds;
-    const startPos = startAnchorOverride
-      ? { x: startAnchorOverride.x, y: startAnchorOverride.y }
-      : (hasProcessLayout
-        ? {
-            x: Math.max(40, bounds.minX - 220),
-            y: Math.max(20, bounds.minY)
-          }
-        : { ...DEFAULT_START_POS });
-    const endPos = endAnchorOverride
-      ? { x: endAnchorOverride.x, y: endAnchorOverride.y }
-      : (hasProcessLayout
-        ? {
-            x: bounds.maxX + 220,
-            y: bounds.maxY + 40
-          }
-        : { ...DEFAULT_END_POS });
-
-    startNode._el.css({ left: `${startPos.x}px`, top: `${startPos.y}px` });
-    endNode._el.css({ left: `${endPos.x}px`, top: `${endPos.y}px` });
-    startNode.updatePos();
-    endNode.updatePos();
-
     nodeCounter = Math.max(maxNodeId + 1, 1);
-    window.flowConfig = null;
     plumb.repaintEverything();
   }
   $("#yaml-file-input").on("change", async function (e) {
@@ -469,38 +432,13 @@ Chart.ready(() => {
       const content = await readFile(file);
       if (typeof jsyaml === 'undefined') { alert('js-yaml not loaded'); return; }
       const config = normalizeConfig(jsyaml.load(content));
-      const usePosition = $("#use-position-file").is(":checked");
-      if (usePosition) {
-        alert("\u8bf7\u9009\u62e9\u5bf9\u5e94\u7684\u4f4d\u7f6e\u6587\u4ef6(\u6587\u4ef6\u540d\u4ee5 -position.yaml \u7ed3\u5c3e)");
-        $("#position-file-input").val("");
-        $("#position-file-input").click();
-        window.flowConfig = config;
-      } else {
-        await buildFlowFromConfigAndPosition(config, null);
-        alert("\u6d41\u7a0b\u56fe\u52a0\u8f7d\u6210\u529f\uff01(\u5df2\u81ea\u52a8\u5e03\u5c40)");
-        $(this).val('');
-        $("#position-file-input").val('');
-      }
+      await buildFlowFromConfig(config);
+      alert("\u6d41\u7a0b\u56fe\u52a0\u8f7d\u6210\u529f\uff01(\u5df2\u81ea\u52a8\u5e03\u5c40)");
+      $(this).val('');
     } catch (error) {
       console.error('Load failed:', error);
       alert(`Load failed: ${error.message}`);
     }
-  });
-  $("#position-file-input").off("change").on("change", async function (e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      const content = await readFile(file);
-      const positionData = jsyaml.load(content);
-      const config = normalizeConfig(window.flowConfig);
-      await buildFlowFromConfigAndPosition(config, positionData);
-      alert("\u6d41\u7a0b\u56fe\u52a0\u8f7d\u6210\u529f\uff01(\u4f7f\u7528\u4f4d\u7f6e\u6587\u4ef6)");
-    } catch (error) {
-      console.error('Load failed:', error);
-      alert(`Load failed: ${error.message}`);
-    }
-    $(this).val('');
-    $("#yaml-file-input").val('');
   });
 
   // Init

@@ -80,7 +80,7 @@ ChartNode.prototype.appendTo = function (container) {
     }
 
     container.append(node);
-    this._jsPlumb.draggable(node, { grid: [10, 10] });
+    this._jsPlumb.draggable(node, { grid: [10, 10], containment: false });
 
     this._el = node;
 };

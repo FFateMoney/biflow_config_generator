@@ -102,13 +102,29 @@ body {
   margin: 0;
   padding: 15px;
   background-color: #ffffff;
-  /* 修改：中间区域可滚动 */
-  overflow-y: auto;
+  overflow: hidden;
+  cursor: grab;
+  --grid-size: 40px;
+  --grid-scale: 1;
+  --grid-offset-x: 0px;
+  --grid-offset-y: 0px;
 }
 
-.flowchart .middle::-webkit-scrollbar {
-  display: none;
-  /* 适用于Chrome, Safari, and Edge */
+.flowchart .middle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+  background-size: calc(var(--grid-size) * var(--grid-scale)) calc(var(--grid-size) * var(--grid-scale));
+  background-position: var(--grid-offset-x) var(--grid-offset-y);
+}
+
+.flowchart .middle.panning {
+  cursor: grabbing;
 }
 
 .flowchart .right {
@@ -467,13 +483,15 @@ body {
 
 /* 新增：画布容器样式，支持大尺寸流程图 */
 #js-chart {
-  width: 2000px;
-  height: 2000px;
   position: relative;
-  background-image: url(../source/grid.png);
-  background-repeat: repeat;
-  min-width: 100%;
-  min-height: 100%;
+  min-width: 2000px;
+  min-height: 2000px;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  transform-origin: 0 0;
+  will-change: transform;
+  z-index: 1;
 }
 
 /* 优化属性面板布局 */
