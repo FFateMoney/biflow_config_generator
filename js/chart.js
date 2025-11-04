@@ -10,7 +10,6 @@
  * @param {Object} [options.data.input_dir] 输入路径（字典）
  * @param {String} [options.data.output_dir] 输出路径（字符串）
  * @param {String} [options.data.tool] 使用工具（字符串）
- * @param {String} [options.data.log_dir] 日志路径（字符串）
  * @param {Object} [options.data.params] 额外参数（字典）
  */
 let ChartNode = function (id, name, x, y, options) {
@@ -25,8 +24,8 @@ let ChartNode = function (id, name, x, y, options) {
         nodeId: id,
         input_dir: {},
         output_dir: '',
-        tool: '',
         log_dir: '',
+        tool: '',
         params: {}
     }, options.data || {});
     this._el = null;
@@ -119,6 +118,10 @@ ChartNode.prototype.addPort = function (options) {
         ],
         allowLoopback: false
     };
+
+    if (options.uuid) {
+        endpointConf.uuid = options.uuid;
+    }
 
     const endpoint = this._jsPlumb.addEndpoint(this._el, endpointConf);
     this._ports.push(endpoint); // 存储端口引用

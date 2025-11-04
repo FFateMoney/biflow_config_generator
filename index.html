@@ -20,7 +20,11 @@
         <!-- Start-left -->
         <div class='left'>
             <div class='left-wrap'>
-                <h1>对象库</h1>
+                <h1>预定义节点</h1>
+                <div class="tool-filter">
+                    <label for="tool-filter">工具筛选：</label>
+                    <select id="tool-filter"></select>
+                </div>
                 <ul class='nodes'></ul>
             </div>
         </div>
@@ -33,8 +37,11 @@
                 <label>flow_name: <input type="text" id="global-flow-name" value="test_flow" /></label>
                 <label>parallelize: <input type="text" id="global-parallelize" value="true" /></label>
                 <label>log_dir: <input type="text" id="global-log-dir" value="E:\\biflow" /></label>
-                <button id="btn-save-yaml">保存为YAML</button>
-                <button id="btn-load-yaml">读取YAML</button>
+                <button id="btn-save-yaml">保存为 YAML</button>
+                <button id="btn-load-yaml">读取 YAML</button>
+                <label style="margin-left:8px;">
+                    <input type="checkbox" id="use-position-file" checked /> 使用位置文件（否则自动布局）？
+                </label>
                 <input type="file" id="yaml-file-input" style="display: none;" accept=".yaml,.yml" />
                 <input type="file" id="position-file-input" style="display: none;" accept=".yaml,.yml" />
             </div>
@@ -49,12 +56,12 @@
                     <h4>基本信息</h4>
                     <label>
                         tool:
-                        <!-- 规定只读 -->
+                        <!-- 指定只读 -->
                         <input class="field-tool" readonly placeholder="工具名称" />
                     </label>
                     <label>
                         subcommand:
-                        <!-- 规定只读 -->
+                        <!-- 指定只读 -->
                         <input class="field-subcommand" readonly placeholder="子命令" />
                     </label>
                 </div>
@@ -73,16 +80,14 @@
 
                 <div class="property-section">
                     <h4>输入目录配置</h4>
-                    <div class="input-dir-fields">
-                        <!-- 动态生成的输入目录字段 -->
-                    </div>
+                    <!-- 动态生成的输入目录字段 -->
+                    <div class="input-dir-fields"></div>
                 </div>
 
                 <div class="property-section">
                     <h4>参数配置</h4>
-                    <div class="params-fields">
-                        <!-- 动态生成的参数字段 -->
-                    </div>
+                    <!-- 动态生成的参数字段 -->
+                    <div class="params-fields"></div>
                 </div>
 
                 <div class="property-actions">

@@ -6,7 +6,7 @@ window.PREDEFINED_NODES = [
       "fastq": "/work/input/fq"
     },
     "output_dir": "/work/output/00_ReadQC/QC_Report_Before_Trimming",
-    "log_dir": "/work/log/ReadQC",
+    
     "params": {
       "fastqc_path": "fastqc",
       "threads": 4,
@@ -21,7 +21,7 @@ window.PREDEFINED_NODES = [
         "input": "/work/output/00_ReadQC/QC_Report_Before_Trimming"
     },
     "output_dir": "/work/output/00_ReadQC/QC_Report_Before_Trimming",
-    "log_dir": "/work/log/ReadQC",
+    
     "dependencies": [
       1
     ],
@@ -36,7 +36,7 @@ window.PREDEFINED_NODES = [
       "fastq": "/work/input/fq"
     },
     "output_dir": "/work/output/00_ReadQC/TrimmedData",
-    "log_dir": "/work/log/ReadQC",
+    
     "params": {
       "trim_galore_path": "trim_galore",
       "cores": 4,
@@ -51,7 +51,7 @@ window.PREDEFINED_NODES = [
       "reference": "/work/input/ref"
     },
     "output_dir": "/work/output/01_ReadMapping/01_Indexing",
-    "log_dir": "/work/log/ReadMapping",
+    
     "dependencies": [
       5
     ],
@@ -69,7 +69,7 @@ window.PREDEFINED_NODES = [
       "base": "/work/output/00_ReadQC/TrimmedData"
     },
     "output_dir": "/work/output/01_ReadMapping/02_Mapping",
-    "log_dir": "/work/log/ReadMapping",
+    
     "parallelize": true,
     "dependencies": [
       6
@@ -102,7 +102,7 @@ window.PREDEFINED_NODES = [
       "input_sam": "/work/output/01_ReadMapping/02_Mapping"
     },
     "output_dir": "/work/output/01_ReadMapping/02_Mapping",
-    "log_dir": "/work/log/ReadMapping",
+    
     "parallelize": true,
     "dependencies": [
       7
@@ -133,7 +133,7 @@ window.PREDEFINED_NODES = [
       "input_bam": "/work/output/01_ReadMapping/02_Mapping"
     },
     "output_dir": "/work/output/01_ReadMapping/03_Dedup",
-    "log_dir": "/work/log/ReadMapping",
+    
     "parallelize": true,
     "dependencies": [
       8
@@ -165,7 +165,7 @@ window.PREDEFINED_NODES = [
       "input_bam": "/work/output/01_ReadMapping/03_Dedup"
     },
     "output_dir": "/work/output/01_ReadMapping/03_Dedup",
-    "log_dir": "/work/log/ReadMapping",
+    
     "parallelize": true,
     "dependencies": [
       9
@@ -199,7 +199,7 @@ window.PREDEFINED_NODES = [
       "reference": "/work/input/ref"
     },
     "output_dir": "/work/input/ref",
-    "log_dir": "/work/log/variant_calling",
+    
     "dependencies": [
       10
     ],
@@ -216,7 +216,7 @@ window.PREDEFINED_NODES = [
       "reference": "/work/input/ref"
     },
     "output_dir": "/work/input/ref",
-    "log_dir": "/work/log/variant_calling",
+    
     "dependencies": [
       10
     ],
@@ -233,7 +233,7 @@ window.PREDEFINED_NODES = [
       "bam": "/work/output/01_ReadMapping/03_Dedup"
     },
     "output_dir": "/work/output/01_ReadMapping/03_Dedup",
-    "log_dir": "/work/log/variant_calling",
+    
     "dependencies": [
       10
     ],
@@ -258,7 +258,7 @@ window.PREDEFINED_NODES = [
       "reference": "cow.chr1.fa"
     },
     "output_dir": "/work/output/02_VariantCalling",
-    "log_dir": "/work/log/variant_calling",
+    
     "dependencies": [
       11,
       12,
@@ -280,7 +280,7 @@ window.PREDEFINED_NODES = [
       "reference": "cow.chr1.fa"
     },
     "output_dir": "/work/output/02_VariantCalling",
-    "log_dir": "/work/log/variant_calling",
+    
     "dependencies": [
       14
     ]
@@ -299,7 +299,7 @@ window.PREDEFINED_NODES = [
       "vcf_prefix": "test",
       "reference": "cow.chr1.fa"
     },
-    "log_dir": "/work/log/variant_calling",
+    
     "output_dir": "/work/output/02_VariantCalling",
     "dependencies": [
       15
@@ -312,7 +312,7 @@ window.PREDEFINED_NODES = [
       "reference": "/work/input/ref",
       "vcf": "/work/output/02_VariantCalling"
     },
-    "log_dir": "/work/log/variant_calling",
+    
     "output_dir": "/work/output/02_VariantCalling",
     "params": {
       "reference": "cow.chr1.fa",
@@ -332,7 +332,7 @@ window.PREDEFINED_NODES = [
       "reference": "/work/input/ref",
       "vcf": "/work/output/02_VariantCalling"
     },
-    "log_dir": "/work/log/variant_calling",
+    
     "output_dir": "/work/output/02_VariantCalling",
     "params": {
       "reference": "cow.chr1.fa",
@@ -353,7 +353,7 @@ window.PREDEFINED_NODES = [
       "reference": "/work/input/ref",
       "vcf": "/work/output/02_VariantCalling"
     },
-    "log_dir": "/work/log/variant_calling",
+    
     "output_dir": "/work/output/02_VariantCalling",
     "params": {
       "reference": "cow.chr1.fa",
@@ -373,7 +373,7 @@ window.PREDEFINED_NODES = [
       "vcf": "/work/output/02_VariantCalling"
     },
     "output_dir": "/work/output/03_PostProcessing/01_VcfFilter",
-    "log_dir": "/work/log/post_processing",
+    
     "parallelize": false,
     "dependencies": [
       19
@@ -390,7 +390,7 @@ window.PREDEFINED_NODES = [
       "vcf": "/work/output/03_PostProcessing/01_VcfFilter"
     },
     "output_dir": "/work/output/03_PostProcessing/02_Plink",
-    "log_dir": "/work/log/post_processing",
+    
     "parallelize": false,
     "dependencies": [
       20
@@ -411,7 +411,7 @@ window.PREDEFINED_NODES = [
       "vcf": "/work/output/03_PostProcessing/01_VcfFilter"
     },
     "output_dir": "/work/output/03_PostProcessing/03_Hapmap",
-    "log_dir": "/work/log/post_processing",
+    
     "parallelize": false,
     "dependencies": [
       20
